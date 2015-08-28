@@ -36,7 +36,7 @@ SELECT
   COALESCE(GROUP_CONCAT(ucq.c_text SEPARATOR ' '), '') AS CommentsTexts,
   IF(q.q_acceptedAnswerId, 'yes', 'no') AS Successful
 
-  INTO OUTFILE @temp_file#'/tmp/raw_questions.csv'
+  INTO OUTFILE '/tmp/raw_questions.csv'
   FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"'
   ESCAPED BY '\\'
   LINES TERMINATED BY '\n'

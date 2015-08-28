@@ -1,4 +1,4 @@
-use stackoverflow_march;
+#use stackoverflow_march;
 
 # Increment the truncate limit of GROUP_CONCAT function for this session
 SET SESSION group_concat_max_len = 100000;
@@ -36,7 +36,7 @@ SELECT
   COALESCE(GROUP_CONCAT(ucq.c_text SEPARATOR ' '), '') AS CommentsTexts,
   IF(q.q_acceptedAnswerId, 'yes', 'no') AS Successful
 
-  INTO OUTFILE '/tmp/raw_questions.csv'
+  INTO OUTFILE @temp_file#'/tmp/raw_questions.csv'
   FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"'
   ESCAPED BY '\\'
   LINES TERMINATED BY '\n'

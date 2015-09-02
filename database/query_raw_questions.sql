@@ -43,9 +43,9 @@ SELECT
 
 FROM questions_mv AS q
 LEFT OUTER JOIN Votes AS v ON q.q_acceptedAnswerId = v.PostId AND v.VoteTypeId = 1
-LEFT OUTER JOIN userscommentsquestions_mv AS ucq ON q.q_postID = ucq.q_Id
+LEFT OUTER JOIN userscommentsquestions_mv AS ucq ON q.q_postID = ucq.q_Id AND (v.Id IS NULL OR ucq.c_ts_creationDate < v.CreationDate)
 ##WHERE q.q_postID = 651
-WHERE ( q.q_acceptedAnswerId IS NULL OR ucq.q_Id IS NULL OR ucq.c_ts_creationDate < v.CreationDate)
+#WHERE ( q.q_acceptedAnswerId IS NULL OR ucq.q_Id IS NULL OR ucq.c_ts_creationDate < v.CreationDate)
 GROUP BY QuestionId
 #LIMIT 20;
 

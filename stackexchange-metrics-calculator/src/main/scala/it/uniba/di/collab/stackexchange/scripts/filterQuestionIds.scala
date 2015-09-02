@@ -73,6 +73,7 @@ object filterQuestionIds {
 
     val reader = CSVReader.open(new File(filePath))(format)
 
+    writer.writeRow(List("QuestionID","CreationDate","Title","Body","Tags","AcceptedDate","NumberOfComments","CommentsTexts","Successful"))
     try {
       val filteredRows = reader.all().tail.filter(fields => ids.contains(fields.head.toInt))
       writer.writeAll(filteredRows)

@@ -16,3 +16,7 @@ project/plugins/project/
 .idea/
 .scala_dependencies
 .worksheet
+
+# Project settings
+database/datasets/*
+!database/datasets/raw_questions_subset.csv

@@ -24,12 +24,11 @@ object filterQuestionIds {
 
       if (nonExistentFiles.isEmpty) {
 
-        //TODO: try
         try {
-          val ids: List[Int] = getValidIds(validQuestionFilePath)
+          val ids: Set[Int] = getValidIds(validQuestionFilePath)
           createFilteredCSV(rawQuestionsFilePath, outputFilePath, ids)
         } catch {
-          case e: Exception => e.printStackTrace()
+          case e: Exception => println(e.getMessage);
         }
 
       } else {
@@ -44,7 +43,7 @@ object filterQuestionIds {
     }
   }
 
-  def getValidIds(filePath: String): List[Int] = {
+  def getValidIds(filePath: String): Set[Int] = {
     implicit object format extends DefaultCSVFormat {
       override val delimiter: Char = ';'
     }
@@ -52,7 +51,7 @@ object filterQuestionIds {
     val reader = CSVReader.open(new File(filePath))(format)
     try {
       val iterator = reader.iteratorWithHeaders
-      iterator.map(elem => elem("PostId").toInt).toList
+      iterator.map(elem => elem("PostId").toInt).toSet
     } catch {
       case e: Exception => throw e
     } finally {
@@ -61,7 +60,7 @@ object filterQuestionIds {
 
   }
 
-  def createFilteredCSV(filePath: String, outputFilePath: String, ids: List[Int]): Unit = {
+  def createFilteredCSV(filePath: String, outputFilePath: String, ids: Set[Int]): Unit = {
     implicit object format extends DefaultCSVFormat {
       override val delimiter: Char = ';'
       override val quoteChar: Char = '"'
@@ -75,8 +74,13 @@ object filterQuestionIds {
 
     writer.writeRow(List("QuestionID","CreationDate","Title","Body","Tags","AcceptedDate","NumberOfComments","CommentsTexts","Successful"))
     try {
-      val filteredRows = reader.all().tail.filter(fields => ids.contains(fields.head.toInt))
-      writer.writeAll(filteredRows)
+      reader.readNext()
+      reader.foreach(fields => {
+        if(ids.contains(fields.head.toInt))
+          writer.writeRow(fields)
+      })
+//      val filteredRows = reader.all().tail.filter(fields => ids.contains(fields.head.toInt))
+//      writer.writeAll(filteredRows)
     } catch {
       case e: Exception => throw e
     } finally {

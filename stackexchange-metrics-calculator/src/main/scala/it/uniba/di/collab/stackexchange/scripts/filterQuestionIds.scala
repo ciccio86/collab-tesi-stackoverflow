@@ -79,8 +79,6 @@ object filterQuestionIds {
         if(ids.contains(fields.head.toInt))
           writer.writeRow(fields)
       })
-//      val filteredRows = reader.all().tail.filter(fields => ids.contains(fields.head.toInt))
-//      writer.writeAll(filteredRows)
     } catch {
       case e: Exception => throw e
     } finally {

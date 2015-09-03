@@ -21,7 +21,7 @@ mkdir -p $LOG_DIR
 echo
 echo "Removing old temp file . . ."
 
-rm -f /tmp/raw_questions.csv
+rm -f $TEMP_FILE
 
 echo
 echo "Creating csv raw dataset in temp folder . . ."

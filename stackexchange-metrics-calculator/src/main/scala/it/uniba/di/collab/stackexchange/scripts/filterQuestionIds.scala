@@ -65,8 +65,8 @@ object filterQuestionIds {
   def createFilteredCSV(filePath: String, outputFilePath: String, ids: Map[Int, String]): Unit = {
     implicit object format extends DefaultCSVFormat {
       override val delimiter: Char = ';'
-      //override val quoteChar: Char = '"'
-      //override val escapeChar: Char = '\\'
+      override val quoteChar: Char = '"'
+      override val escapeChar: Char = '\\'
       override val lineTerminator: String = "\n"
     }
 

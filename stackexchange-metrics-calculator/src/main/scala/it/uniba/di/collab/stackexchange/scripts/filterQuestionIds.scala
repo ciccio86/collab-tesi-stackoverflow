@@ -9,26 +9,24 @@ import java.io._
 object filterQuestionIds {
   def main(args: Array[String]) {
 
-    if (args.length > 1) {
+    if (args.length == 3) {
       val validQuestionFilePath = args(0)
       val rawQuestionsFilePath = args(1)
       val outputFilePath = args(2)
 
-      val nonExistentFiles = Nil
+      var nonExistentFiles = List[String]()
       if (!new java.io.File(validQuestionFilePath).exists)
-        nonExistentFiles :+ validQuestionFilePath
+        nonExistentFiles = validQuestionFilePath :: nonExistentFiles
       if (!new java.io.File(rawQuestionsFilePath).exists)
-        nonExistentFiles :+ rawQuestionsFilePath
-      if (!new java.io.File(outputFilePath).exists)
-        nonExistentFiles :+ outputFilePath
+        nonExistentFiles = rawQuestionsFilePath :: nonExistentFiles
 
       if (nonExistentFiles.isEmpty) {
 
         try {
-          val ids: Set[Int] = getValidIds(validQuestionFilePath)
+          val ids: Map[Int, String] = getValidIds(validQuestionFilePath)
           createFilteredCSV(rawQuestionsFilePath, outputFilePath, ids)
         } catch {
-          case e: Exception => println(e.getMessage);
+          case e: Exception => println(e.printStackTrace());
         }
 
       } else {
@@ -38,12 +36,16 @@ object filterQuestionIds {
       }
 
     } else {
-      println("Please specify the path of the file containing di ids of the valid questions as the first parameter and the raw questions file as the second parameter.")
+      println(
+        """Please specify the path of the file containing di ids of the valid questions as the first parameter,
+          | the raw questions file as the second parameter
+          | and the output file path as the third parameter.""".stripMargin)
       System.exit(1)
     }
   }
 
-  def getValidIds(filePath: String): Set[Int] = {
+  // Takes the ids and 'IsTheSameTopicBTitle' of the valid questions
+  def getValidIds(filePath: String): Map[Int, String] = {
     implicit object format extends DefaultCSVFormat {
       override val delimiter: Char = ';'
     }
@@ -51,7 +53,7 @@ object filterQuestionIds {
     val reader = CSVReader.open(new File(filePath))(format)
     try {
       val iterator = reader.iteratorWithHeaders
-      iterator.map(elem => elem("PostId").toInt).toSet
+      iterator.map(elem => (elem("PostId").toInt, elem("IsTheSameTopicBTitle"))).toMap
     } catch {
       case e: Exception => throw e
     } finally {
@@ -60,11 +62,11 @@ object filterQuestionIds {
 
   }
 
-  def createFilteredCSV(filePath: String, outputFilePath: String, ids: Set[Int]): Unit = {
+  def createFilteredCSV(filePath: String, outputFilePath: String, ids: Map[Int, String]): Unit = {
     implicit object format extends DefaultCSVFormat {
       override val delimiter: Char = ';'
-      override val quoteChar: Char = '"'
-      override val escapeChar: Char = '\\'
+      //override val quoteChar: Char = '"'
+      //override val escapeChar: Char = '\\'
       override val lineTerminator: String = "\n"
     }
 
@@ -72,12 +74,16 @@ object filterQuestionIds {
 
     val reader = CSVReader.open(new File(filePath))(format)
 
-    writer.writeRow(List("QuestionID","CreationDate","Title","Body","Tags","AcceptedDate","NumberOfComments","CommentsTexts","Successful"))
+    writer.writeRow(List("QuestionID","CreationDate","Title","Body","Tags","AcceptedDate","NumberOfComments","CommentsTexts","Successful","IsTheSameTopicBTitle"))
     try {
       reader.readNext()
       reader.foreach(fields => {
-        if(ids.contains(fields.head.toInt))
-          writer.writeRow(fields)
+        val id = fields.head.toInt
+        if(ids.contains(id)) {
+          // Append the IsTheSameTopicBTitle
+          val newFields = fields :+ ids(id)
+          writer.writeRow(newFields)
+        }
       })
     } catch {
       case e: Exception => throw e

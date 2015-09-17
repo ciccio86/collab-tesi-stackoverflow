@@ -18,7 +18,7 @@ object checkSentiment {
 
   def main(args: Array[String]): Unit = {
 
-    if (args.length > 1) {
+    if (args.length == 3) {
       val oldComputedQuestionsFilePath = args(0)
       val notComputedQuestionsFilePath = args(1)
       val outputFilePath = args(2)
@@ -41,7 +41,7 @@ object checkSentiment {
           compareSentiment(oldQuestions, newQuestions, sentiStrength, outputFilePath)
 
         } catch {
-          case e: Exception => println(e.printStackTrace)
+          case e: Exception => println(e.printStackTrace())
         }
       } else {
         println("The following files do not exist:\n")
@@ -50,7 +50,10 @@ object checkSentiment {
       }
 
     } else {
-      println("Please specify the path of the file containing di ids of the valid questions as the first parameter and the raw questions file as the second parameter.")
+      println(
+        """Please specify the path of the file containing the old computed questions as the first parameter,
+          | the raw questions file as the second parameter
+          | and the output result file path as the third argument.""".stripMargin)
       System.exit(1)
     }
 

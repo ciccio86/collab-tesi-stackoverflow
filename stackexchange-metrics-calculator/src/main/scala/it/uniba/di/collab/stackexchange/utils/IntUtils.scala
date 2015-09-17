@@ -8,7 +8,7 @@ object IntUtils {
     def normalizeSentimentScore: Int = {
       i match {
         case 0 => 0
-        case _ => Math.abs(i) - 1
+        case _ => math.abs(i) - 1
       }
     }
   }

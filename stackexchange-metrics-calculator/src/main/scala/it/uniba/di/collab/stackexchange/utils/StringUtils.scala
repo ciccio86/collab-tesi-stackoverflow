@@ -1,6 +1,9 @@
 package it.uniba.di.collab.stackexchange.utils
 
 import com.github.nscala_time.time.Imports._
+import uk.ac.wlv.sentistrength.SentiStrength
+
+import it.uniba.di.collab.stackexchange.utils.IntUtils._
 
 /**
  * Created by francesco on 08/09/15.
@@ -10,8 +13,8 @@ object StringUtils {
   implicit class StringImprovements(val s: String) {
 
     def containsCodeBlock: Boolean = {
-      s.matches("<code>.*?</code>")
-      true
+      val pattern = "<code>.*?</code>".r
+      (pattern findFirstIn s).isDefined
     }
 
     def withoutCodeBlocks: String = {
@@ -45,6 +48,34 @@ object StringUtils {
     def numberOfUrls: Int = {
       val pattern = """<a.*?</a>""".r
       pattern.findAllIn(s).length
+    }
+
+    def upperCharRatio: Double = {
+
+      // NOTE: old metric is calculated counting in total chars whitespace
+      // this does not count whitespace
+
+      val wordPattern = """[\w]+""".r
+      val allChars = wordPattern.findAllIn(s) mkString ""
+      val totalChars = allChars.length
+
+      if (totalChars == 0)
+        totalChars
+      else {
+        val uppercaseChars = allChars.count(_.isUpper)
+        uppercaseChars.toDouble / totalChars
+      }
+    }
+
+    def expressGratitude: Boolean = {
+      val gratitudeTerms = List("thanks", "thx", "thanx", "thank you")
+      gratitudeTerms.exists(s.toLowerCase.contains)
+    }
+
+    def getSentiment(sentiStrength: SentiStrength): (String, String) = {
+      val rawSentimentScores = sentiStrength.computeSentimentScores(s).split(" ").take(2)
+      val Array(positive, negative) = rawSentimentScores.map(_.toInt.normalizeSentimentScore)
+      (positive.toString, negative.toString)
     }
   }
 

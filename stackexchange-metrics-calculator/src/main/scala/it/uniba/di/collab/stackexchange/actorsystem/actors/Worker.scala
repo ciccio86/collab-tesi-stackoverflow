@@ -14,9 +14,10 @@ class Worker extends Actor with ActorLogging {
   val ssthInitialisation: Array[String] = Array("sentidata", PATH, "explain")
   sentiStrength.initialise(ssthInitialisation)
 
+  private val writer = context.actorSelection("/user/Master/Writer")
+
   def receive = {
     case rawQuestion: RawQuestion =>
-      log.debug(rawQuestion.toString)
 
       val codeSnippet = if (rawQuestion.body.containsCodeBlock) "yes" else "no"
       val creationDate = rawQuestion.creationDate.toDate
@@ -35,7 +36,7 @@ class Worker extends Actor with ActorLogging {
       val (sentimentPositiveScore, sentimentNegativeScore) = corpus.getSentiment(sentiStrength)
       val (commentSentimentPositiveScore, commentSentimentNegativeScore) = if (rawQuestion.commentsText.isEmpty) ("NA", "NA") else rawQuestion.commentsText.getSentiment(sentiStrength)
 
-      sender ! FinalDatasetQuestion(rawQuestion.questionId, codeSnippet, weekday, gmtHour, bodyLength, titleLength,
+      writer ! FinalDatasetQuestion(rawQuestion.questionId, codeSnippet, weekday, gmtHour, bodyLength, titleLength,
         url, rawQuestion.isTheSameTopicBTitle, avgUpperCharsPPost, gratitude, nTag, sentimentPositiveScore, sentimentNegativeScore,
         commentSentimentPositiveScore, commentSentimentNegativeScore, rawQuestion.successful)
 

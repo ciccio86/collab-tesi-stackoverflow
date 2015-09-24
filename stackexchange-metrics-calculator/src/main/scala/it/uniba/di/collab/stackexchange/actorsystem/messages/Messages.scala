@@ -14,5 +14,11 @@ object Messages {
 
   case class Terminated(result: String)
 
+  case object QuestionRead
+
+  case object LastQuestionRead
+
+  case object QuestionWritten
+
 }
 

@@ -12,18 +12,18 @@ import scala.concurrent.duration._
 
 object Main {
 
-  implicit val ec = global
+  implicit val ec = global()
 
   def main (args: Array[String]) {
     val rawQuestionsFilePath = args(0)
     val outputFilePath = args(1)
     val numberOfWorkers = if(args.length >= 3) args(2).toIntOpt.getOrElse(10) else 10
     val system = ActorSystem("StackOverflow-System")
-    val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers)))
+    val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers)), "Master")
 
     //mainActor ! Start
 
-    implicit val timeout = Timeout(60 minutes)
+    implicit val timeout = Timeout(60 hours)
 
     val future = mainActor ? Start
     future.map { result =>

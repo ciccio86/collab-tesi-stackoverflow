@@ -2,7 +2,7 @@ package it.uniba.di.collab.stackexchange.actorsystem.actors
 
 import java.io.File
 
-import akka.actor.{ActorRef, Props, Actor}
+import akka.actor.{ActorLogging, ActorRef, Props, Actor}
 import com.github.tototoshi.csv.{CSVReader, CSVWriter, DefaultCSVFormat}
 import it.uniba.di.collab.stackexchange.actorsystem.messages.Messages._
 
@@ -11,7 +11,7 @@ import it.uniba.di.collab.stackexchange.utils.StringUtils._
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Seconds
 
-class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: Int) extends Actor {
+class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: Int) extends Actor with ActorLogging {
 
   private var totalQuestions = 0
   private var questionsProcessed = 0
@@ -36,7 +36,7 @@ class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: 
         fileSender = Some(sender())
         val iterator = reader.iteratorWithHeaders
 
-        val router = context.actorOf(Props(classOf[RouterActor], numberOfWorkers ))
+        val router = context.actorOf(Props(classOf[RouterActor], numberOfWorkers ), "Router")
 
         startTimestamp = DateTime.now()
 

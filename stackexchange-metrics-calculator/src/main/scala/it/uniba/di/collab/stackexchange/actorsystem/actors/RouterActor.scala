@@ -1,15 +1,15 @@
 package it.uniba.di.collab.stackexchange.actorsystem.actors
 
-import akka.actor.{Props, Actor}
+import akka.actor.{ActorLogging, Props, Actor}
 import akka.routing.{RoundRobinRoutingLogic, Router, ActorRefRoutee}
 
 /**
  * Created by francesco on 22/09/15.
  */
-class RouterActor(numberOfWorkers: Int) extends Actor {
+class RouterActor(numberOfWorkers: Int) extends Actor with ActorLogging{
   var router = {
-    val routees = Vector.fill(numberOfWorkers) {
-      val r = context.actorOf(Props[Worker])
+    val routees = Vector.tabulate(numberOfWorkers) { n =>
+      val r = context.actorOf(Props[Worker], s"Worker_$n")
       context watch r
       ActorRefRoutee(r)
     }

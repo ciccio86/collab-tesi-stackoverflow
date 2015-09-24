@@ -1,13 +1,13 @@
 package it.uniba.di.collab.stackexchange.actorsystem.actors
 
-import akka.actor.Actor
+import akka.actor.{ActorLogging, Actor}
 import it.uniba.di.collab.stackexchange.actorsystem.messages.Messages.{FinalDatasetQuestion, RawQuestion}
 import uk.ac.wlv.sentistrength.SentiStrength
 
 import it.uniba.di.collab.stackexchange.utils.StringUtils._
 import it.uniba.di.collab.stackexchange.utils.DateUtils._
 
-class Worker extends Actor {
+class Worker extends Actor with ActorLogging {
 
   private val sentiStrength = new SentiStrength()
   val PATH = getClass.getResource("/SentStrength_Data_Sept2011").getPath + "/"
@@ -16,6 +16,8 @@ class Worker extends Actor {
 
   def receive = {
     case rawQuestion: RawQuestion =>
+      log.debug(rawQuestion.toString)
+
       val codeSnippet = if (rawQuestion.body.containsCodeBlock) "yes" else "no"
       val creationDate = rawQuestion.creationDate.toDate
       val title = rawQuestion.title

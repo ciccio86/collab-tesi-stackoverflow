@@ -18,7 +18,7 @@ object Main {
     val rawQuestionsFilePath = args(0)
     val outputFilePath = args(1)
     val numberOfWorkers = if(args.length >= 3) args(2).toIntOpt.getOrElse(10) else 10
-    val system = ActorSystem("System")
+    val system = ActorSystem("StackOverflow-System")
     val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers)))
 
     //mainActor ! Start

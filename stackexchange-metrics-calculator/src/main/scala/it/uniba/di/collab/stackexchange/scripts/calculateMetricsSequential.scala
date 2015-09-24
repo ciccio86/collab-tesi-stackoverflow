@@ -1,9 +1,7 @@
 package it.uniba.di.collab.stackexchange.scripts
 
 import java.io._
-import java.util.Properties
 
-import grizzled.slf4j.Logging
 import com.github.tototoshi.csv.{CSVWriter, CSVReader, DefaultCSVFormat}
 
 import it.uniba.di.collab.stackexchange.utils.StringUtils._
@@ -17,7 +15,7 @@ import com.github.nscala_time.time.Imports._
 /**
  * Created by francesco on 17/09/15.
  */
-object calculateMetricsSequential extends Logging {
+object calculateMetricsSequential {
   def main(args: Array[String]): Unit = {
     if (args.length == 2) {
       val rawQuestionFilePath = args(0)
@@ -37,7 +35,7 @@ object calculateMetricsSequential extends Logging {
         calculateMetrics(rawQuestionFilePath, outputFilePath)
         val endTimestamp = DateTime.now()
         val executionTime = Seconds.secondsBetween(startTimestamp, endTimestamp).getSeconds
-        info(s"Execution Time: $executionTime seconds.")
+        println(s"Execution Time: $executionTime seconds.")
 
       } else {
         println("The following files do not exist:\n")

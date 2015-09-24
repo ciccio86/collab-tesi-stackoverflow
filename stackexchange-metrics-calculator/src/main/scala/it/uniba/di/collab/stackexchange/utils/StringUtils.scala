@@ -1,5 +1,7 @@
 package it.uniba.di.collab.stackexchange.utils
 
+import scala.util.control.Exception._
+
 import com.github.nscala_time.time.Imports._
 import uk.ac.wlv.sentistrength.SentiStrength
 
@@ -77,6 +79,8 @@ object StringUtils {
       val Array(positive, negative) = rawSentimentScores.map(_.toInt.normalizeSentimentScore)
       (positive.toString, negative.toString)
     }
+
+    def toIntOpt = catching(classOf[NumberFormatException]) opt s.toInt
   }
 
 }

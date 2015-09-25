@@ -1,7 +1,7 @@
 package it.uniba.di.collab.stackexchange.actorsystem.actors
 
 import akka.actor.{ActorLogging, Actor}
-import it.uniba.di.collab.stackexchange.actorsystem.messages.Messages.{FinalDatasetQuestion, RawQuestion}
+import it.uniba.di.collab.stackexchange.actorsystem.messages.Messages._
 import uk.ac.wlv.sentistrength.SentiStrength
 
 import it.uniba.di.collab.stackexchange.utils.StringUtils._
@@ -39,6 +39,8 @@ class Worker extends Actor with ActorLogging {
       writer ! FinalDatasetQuestion(rawQuestion.questionId, codeSnippet, weekday, gmtHour, bodyLength, titleLength,
         url, rawQuestion.isTheSameTopicBTitle, avgUpperCharsPPost, gratitude, nTag, sentimentPositiveScore, sentimentNegativeScore,
         commentSentimentPositiveScore, commentSentimentNegativeScore, rawQuestion.successful)
+
+      sender ! QuestionProcessed
 
     case message =>
       println(s"Worker: Unknown message received: $message .")

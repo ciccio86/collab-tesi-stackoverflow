@@ -12,38 +12,53 @@ import it.uniba.di.collab.stackexchange.utils.StringUtils._
  */
 class ReaderActor(reader: CSVReader, numberOfWorkers: Int) extends Actor {
 
-  val router = context.actorOf(Props(classOf[RouterActor], numberOfWorkers ), "Router")
+  val router = context.actorOf(Props(classOf[RouterActor], numberOfWorkers), "Router")
+  private val iterator = reader.iteratorWithHeaders
+  private val master = context.parent
+  private var isReaderOpen = true
+
 
   def receive = {
     case Start =>
-      try {
-
-        val iterator = reader.iteratorWithHeaders
-
-        for (elem <- iterator) {
-
-          val questionId = elem("QuestionID")
-          val creationDate = elem("CreationDate")
-          val title = elem("Title")
-          val body = elem("Body")
-          val tags = elem("Tags")
-          val cleanedComments = elem("CommentsTexts").withoutCodeBlocks.stripHtmlTags
-          val successful = elem("Successful")
-          val isTheSameTopicBTitle = elem("IsTheSameTopicBTitle")
-
-          router ! RawQuestion(questionId, creationDate, title, body, tags, cleanedComments, successful, isTheSameTopicBTitle)
-
-          // send message to master to notify that a question was read
-          sender ! QuestionRead
-        }
-
-        // send message to master to notify that we finished reading questions
-        sender ! LastQuestionRead
-
-      } catch {
-        case e: Exception => e.printStackTrace()
-      } finally {
-        reader.close()
+      0 to (numberOfWorkers * 10) foreach { _ =>
+        processNextQuestion()
       }
+
+    case QuestionProcessed =>
+      processNextQuestion()
+
+  }
+
+  def processNextQuestion(): Unit = {
+
+    try {
+      if (isReaderOpen && iterator.hasNext) {
+        val elem = iterator.next()
+
+        val questionId = elem("QuestionID")
+        val creationDate = elem("CreationDate")
+        val title = elem("Title")
+        val body = elem("Body")
+        val tags = elem("Tags")
+        val cleanedComments = elem("CommentsTexts").withoutCodeBlocks.stripHtmlTags
+        val successful = elem("Successful")
+        val isTheSameTopicBTitle = elem("IsTheSameTopicBTitle")
+
+        router ! RawQuestion(questionId, creationDate, title, body, tags, cleanedComments, successful, isTheSameTopicBTitle)
+
+        // send message to master to notify that a question was read
+        master ! QuestionRead
+      } else {
+        // send message to master to notify that we finished reading questions
+        master ! LastQuestionRead
+        reader.close()
+        isReaderOpen = false
+      }
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        reader.close()
+        isReaderOpen = false
+    }
   }
 }

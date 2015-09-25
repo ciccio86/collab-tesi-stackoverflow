@@ -1,7 +1,7 @@
 package it.uniba.di.collab.stackexchange.actorsystem.actors
 
 import akka.actor.{ActorLogging, Props, Actor}
-import akka.routing.{RoundRobinRoutingLogic, Router, ActorRefRoutee}
+import akka.routing.{RoundRobinRoutingLogic, Router, ActorRefRoutee, SmallestMailboxRoutingLogic}
 
 /**
  * Created by francesco on 22/09/15.
@@ -13,7 +13,7 @@ class RouterActor(numberOfWorkers: Int) extends Actor with ActorLogging{
       context watch r
       ActorRefRoutee(r)
     }
-    Router(RoundRobinRoutingLogic(), routees)
+    Router(SmallestMailboxRoutingLogic(), routees)
   }
 
   def receive = {

@@ -20,5 +20,7 @@ object Messages {
 
   case object QuestionWritten
 
+  case object QuestionProcessed
+
 }
 

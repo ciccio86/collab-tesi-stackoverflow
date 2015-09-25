@@ -104,9 +104,6 @@ object calculateMetricsSequential {
 
       }
 
-
-      //iterator.map(elem => (elem("PostId").toInt, elem("IsTheSameTopicBTitle"))).toMap
-
     } catch {
       case e: Exception => throw e
     } finally {

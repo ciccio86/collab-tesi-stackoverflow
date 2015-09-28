@@ -14,7 +14,7 @@ class Worker extends Actor with ActorLogging {
   val ssthInitialisation: Array[String] = Array("sentidata", PATH, "explain")
   sentiStrength.initialise(ssthInitialisation)
 
-  private val writer = context.actorSelection("/user/Master/Writer")
+  private val writer = context.actorSelection("/user/master/writer")
 
   def receive = {
     case rawQuestion: RawQuestion =>

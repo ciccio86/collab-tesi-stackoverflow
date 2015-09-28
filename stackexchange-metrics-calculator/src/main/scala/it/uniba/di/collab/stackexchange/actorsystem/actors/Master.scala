@@ -18,8 +18,8 @@ class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: 
   val reader = CSVReader.open(new File(rawQuestionsPath))(format)
   val writer = CSVWriter.open(new File(outputFilePath))(format)
 
-  val readerActor = context.actorOf(Props(classOf[ReaderActor], reader, numberOfWorkers), "Reader")
-  val writerActor = context.actorOf(Props(classOf[WriterActor], writer), "Writer")
+  val readerActor = context.actorOf(Props(classOf[ReaderActor], reader, numberOfWorkers), "reader")
+  val writerActor = context.actorOf(Props(classOf[WriterActor], writer), "writer")
 
   private var readQuestions = 0
   private var writtenQuestions = 0

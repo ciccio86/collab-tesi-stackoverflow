@@ -12,7 +12,7 @@ import it.uniba.di.collab.stackexchange.utils.StringUtils._
  */
 class ReaderActor(reader: CSVReader, numberOfWorkers: Int) extends Actor {
 
-  val router = context.actorOf(Props(classOf[RouterActor], numberOfWorkers), "Router")
+  val router = context.actorOf(Props(classOf[RouterActor], numberOfWorkers), "router")
   private val iterator = reader.iteratorWithHeaders
   private val master = context.parent
   private var isReaderOpen = true

@@ -1,5 +1,7 @@
 package it.uniba.di.collab.stackexchange.actorsystem
 
+import scala.language.postfixOps
+
 import akka.actor.{Props, ActorSystem}
 import akka.pattern.ask
 import akka.util.Timeout
@@ -18,18 +20,17 @@ object Main {
     val rawQuestionsFilePath = args(0)
     val outputFilePath = args(1)
     val numberOfWorkers = if(args.length >= 3) args(2).toIntOpt.getOrElse(10) else 10
-    val system = ActorSystem("StackOverflow-System")
-    val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers)), "Master")
+    val system = ActorSystem("stackoverflow")
+    val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers)), "master")
 
     //mainActor ! Start
 
-    implicit val timeout = Timeout(60 hours)
+    implicit val timeout = Timeout(24 hours)
 
     val future = mainActor ? Start
     future.map { result =>
       println(result)
       system.shutdown()
     }
-
   }
 }

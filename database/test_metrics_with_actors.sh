@@ -26,7 +26,7 @@ do
 echo
 echo "Testing with $i actors . . ."
 
-sbt --error 'set showSuccess := false' "runMain it.uniba.di.collab.stackexchange.actorsystem.Main $1 $2 $i" >> $LOGFILE
+sbt --error 'set showSuccess := false' "runMain it.uniba.di.collab.stackexchange.actorsystem.Main $RAW_QUESTIONS_FILE $OUTPUT_FILE $i" >> $LOGFILE
 
 done
 

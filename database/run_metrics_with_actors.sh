@@ -24,4 +24,6 @@ echo "Testing with $NUMBER_OF_ACTORS actors . . ."
 
 sbt --error 'set showSuccess := false' "runMain it.uniba.di.collab.stackexchange.actorsystem.Main $RAW_QUESTIONS_FILE $OUTPUT_FILE $NUMBER_OF_ACTORS" >> $LOGFILE
 
+echo "Finished: view log at $LOGFILE"
+
 cd $OLD_PWD

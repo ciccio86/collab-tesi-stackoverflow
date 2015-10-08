@@ -3,8 +3,11 @@
  */
 package it.uniba.di.collab.stackexchange.scripts
 
+import com.github.nscala_time.time.Imports._
 import com.github.tototoshi.csv._
 import java.io._
+
+import org.joda.time.Seconds
 
 object filterQuestionIds {
   def main(args: Array[String]) {
@@ -23,8 +26,19 @@ object filterQuestionIds {
       if (nonExistentFiles.isEmpty) {
 
         try {
+          val getIdsStartTimestamp = DateTime.now()
           val ids: Map[Int, String] = getValidIds(validQuestionFilePath)
+          val getIdsEndTimestamp = DateTime.now()
+          val filterStartTimestamp = DateTime.now()
           createFilteredCSV(rawQuestionsFilePath, outputFilePath, ids)
+          val filterEndTimestamp = DateTime.now()
+
+          val getIdsExecutionTime = Seconds.secondsBetween(getIdsStartTimestamp, getIdsEndTimestamp).getSeconds
+          val filteringExecutionTime = Seconds.secondsBetween(filterStartTimestamp, filterEndTimestamp).getSeconds
+          println(s"Execution Time to get all valid Ids: $getIdsExecutionTime seconds.")
+          println(s"Execution Time to filter valid questions: $filteringExecutionTime seconds.")
+
+
         } catch {
           case e: Exception => println(e.printStackTrace());
         }

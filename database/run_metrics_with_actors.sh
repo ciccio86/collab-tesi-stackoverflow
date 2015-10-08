@@ -20,7 +20,7 @@ mkdir -p $LOG_DIR
 echo "questions;workers;executionTimeinSeconds" > $LOGFILE
 
 echo
-echo "Testing with $NUMBER_OF_ACTORS actors . . ."
+echo "Running with $NUMBER_OF_ACTORS actors . . ."
 
 sbt --error 'set showSuccess := false' "runMain it.uniba.di.collab.stackexchange.actorsystem.Main $RAW_QUESTIONS_FILE $OUTPUT_FILE $NUMBER_OF_ACTORS" >> $LOGFILE
 

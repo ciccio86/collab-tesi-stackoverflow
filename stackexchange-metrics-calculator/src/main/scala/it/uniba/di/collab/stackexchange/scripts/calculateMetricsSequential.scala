@@ -21,10 +21,6 @@ object calculateMetricsSequential {
       val rawQuestionFilePath = args(0)
       val outputFilePath = args(1)
 
-//      val prop = new Properties()
-//      prop.load(new FileInputStream(getClass.getResource("/simplelogger.properties").getPath))
-//      prop.setProperty("org.slf4j.simpleLogger.logFile", "/tmp/metrics_sequential.log")
-
       var nonExistentFiles = List[String]()
       if (!new java.io.File(rawQuestionFilePath).exists)
         nonExistentFiles = rawQuestionFilePath :: nonExistentFiles

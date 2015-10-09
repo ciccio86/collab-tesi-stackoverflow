@@ -9,16 +9,20 @@ import it.uniba.di.collab.stackexchange.actorsystem.messages.Messages._
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Seconds
 
-class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: Int) extends Actor with ActorLogging {
+class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: Int, forWeka: Boolean) extends Actor with ActorLogging {
 
   implicit object format extends DefaultCSVFormat {
     override val delimiter: Char = ';'
   }
 
-  val reader = CSVReader.open(new File(rawQuestionsPath))(format)
-  val writer = CSVWriter.open(new File(outputFilePath))(format)
+  implicit object writerFormat extends DefaultCSVFormat {
+    override val delimiter: Char = if (forWeka) ',' else ';'
+  }
 
-  val readerActor = context.actorOf(Props(classOf[ReaderActor], reader, numberOfWorkers), "reader")
+  val reader = CSVReader.open(new File(rawQuestionsPath))(format)
+  val writer = CSVWriter.open(new File(outputFilePath))(writerFormat)
+
+  val readerActor = context.actorOf(Props(classOf[ReaderActor], reader, numberOfWorkers, forWeka), "reader")
   val writerActor = context.actorOf(Props(classOf[WriterActor], writer), "writer")
 
   private var readQuestions = 0

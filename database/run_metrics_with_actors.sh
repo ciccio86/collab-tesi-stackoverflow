@@ -7,6 +7,12 @@ CREATION_TIMESTAMP="$(date +%s)"
 RAW_QUESTIONS_FILE=$1
 OUTPUT_FILE=$2
 NUMBER_OF_ACTORS=$3
+if [ "$4" = "-weka" ]
+  then
+    WEKA_FLAG="-weka"
+  else
+    WEKA_FLAG=""
+fi
 LOGFILE="$LOG_DIR/metrics_with_$NUMBER_OF_ACTORS_actors_log_$CREATION_TIMESTAMP.log"
 
 #change into the directory of the sbt project
@@ -22,7 +28,7 @@ echo "questions;workers;executionTimeinSeconds" > $LOGFILE
 echo
 echo "Running with $NUMBER_OF_ACTORS actors . . ."
 
-sbt --error 'set showSuccess := false' "runMain it.uniba.di.collab.stackexchange.actorsystem.Main $RAW_QUESTIONS_FILE $OUTPUT_FILE $NUMBER_OF_ACTORS" >> $LOGFILE
+sbt --error 'set showSuccess := false' "runMain it.uniba.di.collab.stackexchange.actorsystem.Main $RAW_QUESTIONS_FILE $OUTPUT_FILE $NUMBER_OF_ACTORS $WEKA_FLAG" >> $LOGFILE
 
 echo "Finished: view log at $LOGFILE"
 

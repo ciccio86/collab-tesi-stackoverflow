@@ -7,7 +7,9 @@ import uk.ac.wlv.sentistrength.SentiStrength
 import it.uniba.di.collab.stackexchange.utils.StringUtils._
 import it.uniba.di.collab.stackexchange.utils.DateUtils._
 
-class Worker extends Actor with ActorLogging {
+class Worker(forWeka: Boolean) extends Actor with ActorLogging {
+
+  private val text_for_not_available = if (forWeka) "?" else "NA"
 
   private val sentiStrength = new SentiStrength()
   val PATH = getClass.getResource("/SentStrength_Data_Sept2011").getPath + "/"
@@ -34,7 +36,7 @@ class Worker extends Actor with ActorLogging {
       val gratitude = if (cleanedBody.expressGratitude) "yes" else "no"
       val nTag = """<.*?>""".r.findAllIn(rawQuestion.tags).length.toString
       val (sentimentPositiveScore, sentimentNegativeScore) = corpus.getSentiment(sentiStrength)
-      val (commentSentimentPositiveScore, commentSentimentNegativeScore) = if (rawQuestion.commentsText.isEmpty) ("NA", "NA") else rawQuestion.commentsText.getSentiment(sentiStrength)
+      val (commentSentimentPositiveScore, commentSentimentNegativeScore) = if (rawQuestion.commentsText.isEmpty) (text_for_not_available, text_for_not_available) else rawQuestion.commentsText.getSentiment(sentiStrength)
 
       writer ! FinalDatasetQuestion(rawQuestion.questionId, codeSnippet, weekday, gmtHour, bodyLength, titleLength,
         url, rawQuestion.isTheSameTopicBTitle, avgUpperCharsPPost, gratitude, nTag, sentimentPositiveScore, sentimentNegativeScore,

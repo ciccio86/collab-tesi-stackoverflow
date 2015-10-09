@@ -20,8 +20,9 @@ object Main {
     val rawQuestionsFilePath = args(0)
     val outputFilePath = args(1)
     val numberOfWorkers = if(args.length >= 3) args(2).toIntOpt.getOrElse(10) else 10
+    val forWeka = if(args.length >= 4 && args(3).toLowerCase == "-weka") true else false
     val system = ActorSystem("stackoverflow")
-    val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers)), "master")
+    val mainActor = system.actorOf(Props(new Master(rawQuestionsFilePath, outputFilePath, numberOfWorkers, forWeka)), "master")
 
     //mainActor ! Start
 

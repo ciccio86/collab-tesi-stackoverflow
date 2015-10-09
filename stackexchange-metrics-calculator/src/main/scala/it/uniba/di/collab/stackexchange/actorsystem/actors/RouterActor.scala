@@ -6,10 +6,10 @@ import akka.routing.{RoundRobinRoutingLogic, Router, ActorRefRoutee, SmallestMai
 /**
  * Created by francesco on 22/09/15.
  */
-class RouterActor(numberOfWorkers: Int) extends Actor with ActorLogging{
+class RouterActor(numberOfWorkers: Int, forWeka: Boolean) extends Actor with ActorLogging{
   var router = {
     val routees = Vector.tabulate(numberOfWorkers) { n =>
-      val r = context.actorOf(Props[Worker], s"Worker_$n")
+      val r = context.actorOf(Props(classOf[Worker], forWeka), s"Worker_$n")
       context watch r
       ActorRefRoutee(r)
     }

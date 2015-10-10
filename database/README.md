@@ -66,7 +66,7 @@ Una volta ottenuto il file csv contenente le domande "raw" che si intende utiliz
 
 
 ```bash
-./run_metrics_with_actors <PATH_FILE_DOMANDE_RAW> <PATH_FILE_OUTPUT> <NUMERO_ATTORI>
+./run_metrics_with_actors <PATH_FILE_DOMANDE_RAW> <PATH_FILE_OUTPUT> <NUMERO_ATTORI> [-weka]
 ```
 
 Dove: 
@@ -76,6 +76,8 @@ Dove:
 `<PATH_FILE_OUTPUT>` è il percorso completo al file csv risultante che contiene il risultato del calcolo delle metriche.
 
 `<NUMERO_ATTORI>` è il numero di attori Worker che si intende utilizzare per il calcolo delle metriche.
+
+Infine è possibile aggiungere il flag opzionale `-weka` per fare in modo che l'output csv sia un file nel formato richiesto da `weka`; omettendolo l'output sarà nel formato richiesto da `R`.
 
 Il risultato dell'esecuzione dello script è il file csv generato al percorso `<PATH_FILE_OUTPUT>` oltre ad un file nella cartella `logs` chiamato `metrics_with_<NUMERO_ATTORI>_actors_log_<TIMESTAMP>.log` contenente il log dei tempi di esecuzione dello script.
 

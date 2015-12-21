@@ -10,7 +10,8 @@ object Messages {
   case class FinalDatasetQuestion(postId: String, codeSnippet: String, weekday: String, gmtHour: String, bodyLength: String,
                                   titleLength: String, url: String, isTheSameTopicBTitle: String, avgUpperCharsPPost: String,
                                   gratitude: String, nTag: String, sentimentPositiveScore: String, sentimentNegativeScore: String,
-                                  commentSentimentPositiveScore: String, commentSentimentNegativeScore: String, successful: String)
+                                  commentSentimentPositiveScore: String, commentSentimentNegativeScore: String, successful: String,
+                                  questionText: String, commentsText: String)
 
   case class Terminated(result: String)
 

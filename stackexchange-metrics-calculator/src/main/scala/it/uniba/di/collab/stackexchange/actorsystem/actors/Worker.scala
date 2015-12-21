@@ -40,7 +40,7 @@ class Worker(forWeka: Boolean) extends Actor with ActorLogging {
 
       writer ! FinalDatasetQuestion(rawQuestion.questionId, codeSnippet, weekday, gmtHour, bodyLength, titleLength,
         url, rawQuestion.isTheSameTopicBTitle, avgUpperCharsPPost, gratitude, nTag, sentimentPositiveScore, sentimentNegativeScore,
-        commentSentimentPositiveScore, commentSentimentNegativeScore, rawQuestion.successful)
+        commentSentimentPositiveScore, commentSentimentNegativeScore, rawQuestion.successful, cleanedBody, rawQuestion.commentsText)
 
       sender ! QuestionProcessed
 

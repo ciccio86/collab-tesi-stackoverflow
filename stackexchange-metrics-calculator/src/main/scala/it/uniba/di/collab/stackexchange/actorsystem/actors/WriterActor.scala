@@ -14,7 +14,7 @@ class WriterActor(writer: CSVWriter) extends Actor {
 
   writer.writeRow(List("PostId", "CodeSnippet", "Weekday", "GMTHour", "BodyLength", "TitleLength", "URL", "IsTheSameTopicBTitle",
     "AvgUpperCharsPPost", "Gratitude", "NTag", "SentimentPositiveScore", "SentimentNegativeScore", "CommentSentimentPositiveScore",
-    "CommentSentimentNegativeScore", "Successful"))
+    "CommentSentimentNegativeScore", "Successful", "QuestionText", "CommentsText"))
 
   def receive = {
     case finalQuestion: FinalDatasetQuestion =>
@@ -22,7 +22,7 @@ class WriterActor(writer: CSVWriter) extends Actor {
         finalQuestion.bodyLength, finalQuestion.titleLength, finalQuestion.url, finalQuestion.isTheSameTopicBTitle,
         finalQuestion.avgUpperCharsPPost, finalQuestion.gratitude, finalQuestion.nTag, finalQuestion.sentimentPositiveScore,
         finalQuestion.sentimentNegativeScore, finalQuestion.commentSentimentPositiveScore,
-        finalQuestion.commentSentimentNegativeScore, finalQuestion.successful))
+        finalQuestion.commentSentimentNegativeScore, finalQuestion.successful, finalQuestion.questionText, finalQuestion.commentsText))
 
       master ! QuestionWritten
   }

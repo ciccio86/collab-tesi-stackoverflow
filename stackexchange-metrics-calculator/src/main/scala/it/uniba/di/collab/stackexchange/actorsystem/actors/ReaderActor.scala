@@ -1,11 +1,8 @@
 package it.uniba.di.collab.stackexchange.actorsystem.actors
 
-import java.io.File
-
-import akka.actor.{Props, Actor}
+import akka.actor.{Actor, Props}
 import com.github.tototoshi.csv.CSVReader
 import it.uniba.di.collab.stackexchange.actorsystem.messages.Messages._
-import it.uniba.di.collab.stackexchange.utils.StringUtils._
 
 /**
  * Created by francesco on 24/09/15.
@@ -35,16 +32,11 @@ class ReaderActor(reader: CSVReader, numberOfWorkers: Int, forWeka: Boolean) ext
       if (isReaderOpen && iterator.hasNext) {
         val elem = iterator.next()
 
-        val questionId = elem("QuestionID")
-        val creationDate = elem("CreationDate")
-        val title = elem("Title")
+        val id = elem("Id")
         val body = elem("Body")
-        val tags = elem("Tags")
-        val cleanedComments = elem("CommentsTexts").withoutCodeBlocks.stripHtmlTags
-        val successful = elem("Successful")
-        val isTheSameTopicBTitle = elem("IsTheSameTopicBTitle")
+        val `type` = elem("Type")
 
-        router ! RawQuestion(questionId, creationDate, title, body, tags, cleanedComments, successful, isTheSameTopicBTitle)
+        router ! RawQuestion(id, body, `type`)
 
         // send message to master to notify that a question was read
         master ! QuestionRead

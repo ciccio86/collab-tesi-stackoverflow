@@ -14,6 +14,11 @@ object StringUtils {
 
   implicit class StringImprovements(val s: String) {
 
+    def stripNewlineChars: String = {
+      val pattern = "(\\n+\\r*)+"
+      s.replaceAll(pattern, " ")
+    }
+
     def containsCodeBlock: Boolean = {
       val pattern = "<code>.*?</code>".r
       (pattern findFirstIn s).isDefined

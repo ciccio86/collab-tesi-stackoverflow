@@ -23,35 +23,31 @@ UNION ALL
 
 SELECT
  ##ucq.c_Id AS CommentID,
-  q.Id AS QuestionID,
-  q.CreationDate AS CreationDate,
-  q.Title AS Title,
-  q.Body AS Body,
-  q.Tags AS Tags,
+  q.q_postID AS QuestionID,
+  q.q_postDate AS CreationDate,
+  q.q_title AS Title,
+  q.q_body AS Body,
+  q.q_tags AS Tags,
   ##ucq.userId AS UserId,
   ##ucq.c_ts_creationDate AS CommentDate,
   ##q.q_acceptedAnswerId AS AcceptedAnswerId,
   COALESCE(v.CreationDate, 'Null') AS AcceptedDate,
   IF(ucq.q_Id, COUNT(*), 0) AS NumberOfComments,
   COALESCE(GROUP_CONCAT(ucq.c_text SEPARATOR ' '), '') AS CommentsTexts,
-  IF(q.AcceptedAnswerId, 'yes', 'no') AS Successful
+  IF(q.q_acceptedAnswerId, 'yes', 'no') AS Successful
 
   INTO OUTFILE '/mnt/vdb1/emotions-online-qa/build_dataset/sql/raw_questions.csv'
   FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"'
   ESCAPED BY '\\'
   LINES TERMINATED BY '\n'
 
-FROM Posts AS q
-LEFT OUTER JOIN Votes AS v ON q.AcceptedAnswerId = v.PostId AND v.VoteTypeId = 1
-LEFT OUTER JOIN userscommentsquestions_mv AS ucq ON q.Id = ucq.q_Id AND (v.Id IS NULL OR ucq.c_ts_creationDate < v.CreationDate)
+FROM questions_mv AS q
+LEFT OUTER JOIN Votes AS v ON q.q_acceptedAnswerId = v.PostId AND v.VoteTypeId = 1
+LEFT OUTER JOIN userscommentsquestions_mv AS ucq ON q.q_postID = ucq.q_Id AND (v.Id IS NULL OR ucq.c_ts_creationDate < v.CreationDate)
 ##WHERE q.q_postID = 651
 #WHERE ( q.q_acceptedAnswerId IS NULL OR ucq.q_Id IS NULL OR ucq.c_ts_creationDate < v.CreationDate)
-WHERE q.PostTypeId = 1
-AND q.LastEditDate IS NULL
-AND q.ClosedDate IS NULL
-AND q.CommunityOwnedDate IS NULL
 GROUP BY QuestionId
-LIMIT 20;
+#LIMIT 20;
 
 ## Some Example Ids ##################
 # 17 - body contains character '"'   #

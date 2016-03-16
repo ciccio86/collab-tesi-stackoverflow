@@ -27,7 +27,7 @@ class Worker(forWeka: Boolean) extends Actor with ActorLogging {
       val body = rawQuestion.body
       val weekday = creationDate.toWeekDay
       val gmtHour = creationDate.toGMTHour
-      val cleanedBody = body.withoutCodeBlocks.stripHtmlTags
+      val cleanedBody = body.withoutCodeBlocks.stripHtmlTags.stripNewlineChars
       val corpus = title + " " + cleanedBody
       val bodyLength = cleanedBody.numberOfWords(false).toString
       val titleLength = title.numberOfWords(false).toString

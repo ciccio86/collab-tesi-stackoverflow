@@ -14,13 +14,18 @@ object StringUtils {
 
   implicit class StringImprovements(val s: String) {
 
+    def stripNewlineChars: String = {
+      val pattern = "(\\n+\\r*)+"
+      s.replaceAll(pattern, " ")
+    }
+
     def containsCodeBlock: Boolean = {
-      val pattern = "<code>.*?</code>".r
+      val pattern = "(?i)<code>.*?</code>".r //Case insensitive match
       (pattern findFirstIn s).isDefined
     }
 
     def withoutCodeBlocks: String = {
-      val pattern = "<code>.*?</code>"
+      val pattern = "(?i)<code>.*?</code>" //Case insensitive match
       s.replaceAll(pattern, "")
     }
 

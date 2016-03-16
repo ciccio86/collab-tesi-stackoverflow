@@ -51,7 +51,7 @@ AND q.LastEditDate IS NULL
 AND q.ClosedDate IS NULL
 AND q.CommunityOwnedDate IS NULL
 GROUP BY QuestionId
-LIMIT 20;
+#LIMIT 20;
 
 ## Some Example Ids ##################
 # 17 - body contains character '"'   #

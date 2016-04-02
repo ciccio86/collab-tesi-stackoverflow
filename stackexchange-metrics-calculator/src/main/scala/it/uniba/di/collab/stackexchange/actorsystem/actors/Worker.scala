@@ -39,7 +39,7 @@ class Worker(forWeka: Boolean) extends Actor with ActorLogging {
       val (commentSentimentPositiveScore, commentSentimentNegativeScore) = if (rawQuestion.commentsText.isEmpty) (text_for_not_available, text_for_not_available) else rawQuestion.commentsText.getSentiment(sentiStrength)
 
       writer ! FinalDatasetQuestion(rawQuestion.questionId, codeSnippet, weekday, gmtHour, bodyLength, titleLength,
-        url, rawQuestion.isTheSameTopicBTitle, avgUpperCharsPPost, gratitude, nTag, sentimentPositiveScore, sentimentNegativeScore,
+        url, avgUpperCharsPPost, gratitude, nTag, sentimentPositiveScore, sentimentNegativeScore,
         commentSentimentPositiveScore, commentSentimentNegativeScore, rawQuestion.successful)
 
       sender ! QuestionProcessed

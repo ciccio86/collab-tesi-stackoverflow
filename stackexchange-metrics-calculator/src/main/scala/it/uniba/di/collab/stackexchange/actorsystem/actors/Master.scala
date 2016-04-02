@@ -13,7 +13,7 @@ class Master(rawQuestionsPath: String, outputFilePath: String, numberOfWorkers: 
 
   implicit object format extends DefaultCSVFormat {
     override val delimiter: Char = ';'
-    override val escapeChar: Char= '\\'
+    override val escapeChar: Char= '\\' //raw files are escaped using '\' character
   }
 
   implicit object writerFormat extends DefaultCSVFormat {

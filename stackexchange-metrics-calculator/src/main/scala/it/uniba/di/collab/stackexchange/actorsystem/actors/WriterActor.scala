@@ -12,14 +12,14 @@ class WriterActor(writer: CSVWriter) extends Actor {
   private val master = context.parent
 
 
-  writer.writeRow(List("PostId", "CodeSnippet", "Weekday", "GMTHour", "BodyLength", "TitleLength", "URL", "IsTheSameTopicBTitle",
+  writer.writeRow(List("PostId", "CodeSnippet", "Weekday", "GMTHour", "BodyLength", "TitleLength", "URL", /*"IsTheSameTopicBTitle",*/
     "AvgUpperCharsPPost", "Gratitude", "NTag", "SentimentPositiveScore", "SentimentNegativeScore", "CommentSentimentPositiveScore",
     "CommentSentimentNegativeScore", "Successful"))
 
   def receive = {
     case finalQuestion: FinalDatasetQuestion =>
       writer.writeRow(List(finalQuestion.postId, finalQuestion.codeSnippet, finalQuestion.weekday, finalQuestion.gmtHour,
-        finalQuestion.bodyLength, finalQuestion.titleLength, finalQuestion.url, finalQuestion.isTheSameTopicBTitle,
+        finalQuestion.bodyLength, finalQuestion.titleLength, finalQuestion.url,
         finalQuestion.avgUpperCharsPPost, finalQuestion.gratitude, finalQuestion.nTag, finalQuestion.sentimentPositiveScore,
         finalQuestion.sentimentNegativeScore, finalQuestion.commentSentimentPositiveScore,
         finalQuestion.commentSentimentNegativeScore, finalQuestion.successful))

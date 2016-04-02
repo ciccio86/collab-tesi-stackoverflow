@@ -42,9 +42,10 @@ class ReaderActor(reader: CSVReader, numberOfWorkers: Int, forWeka: Boolean) ext
         val tags = elem("Tags")
         val cleanedComments = elem("CommentsTexts").withoutCodeBlocks.stripHtmlTags
         val successful = elem("Successful")
-        val isTheSameTopicBTitle = elem("IsTheSameTopicBTitle")
+        // Uncomment if raw questions contains field "IsTheSameTopicBTitle"
+        // val isTheSameTopicBTitle = elem("IsTheSameTopicBTitle")
 
-        router ! RawQuestion(questionId, creationDate, title, body, tags, cleanedComments, successful, isTheSameTopicBTitle)
+        router ! RawQuestion(questionId, creationDate, title, body, tags, cleanedComments, successful)
 
         // send message to master to notify that a question was read
         master ! QuestionRead

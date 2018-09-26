@@ -1,5 +1,5 @@
 # collab-tesi-stackoverflow
-Repository contenente il materiale per la realizzazione di calcolo di metriche su un dump di stack overflow.
+Repository contenente il materiale per la realizzazione di calcolo di metriche su dump di stack overflow.
 
 ## Struttura
 Il progetto contiene 2 cartelle principali:
